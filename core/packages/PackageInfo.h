@@ -271,6 +271,8 @@ public:
     std::optional<core::AutocorrectSuggestion> aggregateMissingImports(const core::GlobalState &gs) const;
     std::optional<core::AutocorrectSuggestion> aggregateMissingExports(const core::GlobalState &gs,
                                                                        std::vector<core::SymbolRef> &toExport) const;
+
+    std::vector<const Import> packageReferencesToImportList(const core::GlobalState &gs) const;
 };
 CheckSize(PackageInfo, 240, 8);
 

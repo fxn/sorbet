@@ -554,6 +554,16 @@ PackageInfo::aggregateMissingExports(const core::GlobalState &gs, vector<core::S
     return core::AutocorrectSuggestion{"Add missing exports", std::move(allEdits)};
 }
 
+vector<const Import> PackageInfo::packageReferencesToImportList(const core::GlobalState &gs) const {
+    vector<const Import> result;
+    for (auto [pkgName, v] : referencedPackages) {
+        auto files = v.first;
+        auto importType = broadestImportType(gs, files);
+        result.push_back({pkgName, importType, core::LocOffsets::none()});
+    }
+    return result;
+}
+
 bool PackageInfo::operator==(const PackageInfo &rhs) const {
     return mangledName() == rhs.mangledName();
 }
