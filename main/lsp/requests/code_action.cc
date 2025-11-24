@@ -138,8 +138,17 @@ unique_ptr<ResponseMessage> CodeActionTask::runRequest(LSPTypecheckerDelegate &t
         if (!error->isSilenced && !error->autocorrects.empty()) {
             // Collect all autocorrects regardless of range to compile into a "source" autocorrect whose scope is
             // the whole file.
+            vector<string> seenEdits;
             for (auto &autocorrect : error->autocorrects) {
-                allEdits.insert(allEdits.end(), autocorrect.edits.begin(), autocorrect.edits.end());
+                if (autocorrect.shouldDeDup) {
+                    for (auto &edit : autocorrect.edits) {
+                        if (absl::c_find(seenEdits, edit.replacement) == seenEdits.end()) {
+                            allEdits.push_back(edit);
+                        }
+                    }
+                } else {
+                    allEdits.insert(allEdits.end(), autocorrect.edits.begin(), autocorrect.edits.end());
+                }
             }
 
             // We return code actions corresponding to any error that encloses the request's range. Matching request

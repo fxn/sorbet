@@ -298,7 +298,7 @@ optional<core::AutocorrectSuggestion> PackageInfo::addImport(const core::GlobalS
         suggestionTitle = fmt::format("Convert existing import to `{}`", importTypeMethod);
     }
 
-    core::AutocorrectSuggestion suggestion(suggestionTitle, edits);
+    core::AutocorrectSuggestion suggestion(suggestionTitle, edits, false /* isDidYouMean */, true /* shouldDeDup */);
     return {suggestion};
 }
 
@@ -344,7 +344,7 @@ optional<core::AutocorrectSuggestion> PackageInfo::addExport(const core::GlobalS
 
     core::AutocorrectSuggestion suggestion(
         fmt::format("Export `{}` in package `{}`", newExportName, mangledName_.owner.show(gs)),
-        {{insertionLoc, fmt::format("\n  {}", exportLine)}});
+        {{insertionLoc, fmt::format("\n  {}", exportLine)}}, false /* isDidYouMean */, true /* shouldDeDup */);
     return {suggestion};
 }
 
